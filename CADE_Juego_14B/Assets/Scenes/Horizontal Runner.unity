@@ -1196,11 +1196,11 @@ PrefabInstance:
       objectReference: {fileID: 9100000, guid: b0f713e6de048554ba5dd867a927f51c, type: 2}
     - target: {fileID: 7878350319992209165, guid: 8d47c8669be882a4981927f05cbb2ea5, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -5.96
+      value: -5.08
       objectReference: {fileID: 0}
     - target: {fileID: 7878350319992209165, guid: 8d47c8669be882a4981927f05cbb2ea5, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -4.14944
+      value: -3.95
       objectReference: {fileID: 0}
     - target: {fileID: 7878350319992209165, guid: 8d47c8669be882a4981927f05cbb2ea5, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1332,7 +1332,7 @@ Transform:
   m_GameObject: {fileID: 677453017}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.12423992, y: -0.022139788, z: 0}
+  m_LocalPosition: {x: -0.12423992, y: 0.13, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1503,13 +1503,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 503240357f9410f4da9b4c00f6317cb0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Spawner
-  Enemies:
-  - {fileID: 7943769282369255949, guid: 010445698ede44b46aef3289423ad77e, type: 3}
-  - {fileID: 8142378032555994437, guid: af9eaf91ffb7a274fb3f78cb73e987a5, type: 3}
-  intervalo: 2
-  Spawns:
-  - {fileID: 677453017}
-  - {fileID: 992896200}
+  topPrefabs:
+  - {fileID: 8847526611026748026, guid: 3ede7972cd032354385fede7968449bb, type: 3}
+  - {fileID: 8847526611026748026, guid: 00bc268ac8b92b14494365e966aa8ce3, type: 3}
+  bottomPrefabs:
+  - {fileID: 1428344075834983399, guid: f20e60ba3c43d49478be7678451b802f, type: 3}
+  - {fileID: 4847189126504866369, guid: 9b781e566690e834c890bed0c2cf26f4, type: 3}
+  - {fileID: 9022095147445423609, guid: 010be9f7412b2524599916fd081d3c55, type: 3}
+  spawnArriba: {fileID: 677453018}
+  spawnAbajo: {fileID: 992896201}
+  intervaloMin: 1
+  intervaloMax: 3
+  probTop: 0.5
+  velocidadBase: -5
+  dificultadDivisor: 5
   timerText: {fileID: 408570114}
 --- !u!4 &919273742
 Transform:
@@ -1551,7 +1558,7 @@ Transform:
   m_GameObject: {fileID: 992896200}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.12423992, y: -1.2721398, z: 0}
+  m_LocalPosition: {x: -0.1242399, y: -2.26, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

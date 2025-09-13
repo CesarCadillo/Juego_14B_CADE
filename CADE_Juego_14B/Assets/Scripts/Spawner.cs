@@ -1,44 +1,76 @@
-
-using System;
 using TMPro;
 using UnityEngine;
+using System.Collections;
 
 public class Spawner : MonoBehaviour
 {
-    [SerializeField] GameObject[] Enemies;
+    [Header("Prefabs por carril")]
+    [SerializeField] private GameObject[] topPrefabs;    
+    [SerializeField] private GameObject[] bottomPrefabs; 
+
+    [Header("Puntos de spawn")]
+    [SerializeField] private Transform spawnArriba;   
+    [SerializeField] private Transform spawnAbajo;  
+
+    [Header("Velocidad de spawn")]
+    [SerializeField] private float intervaloMin = 1f;
+    [SerializeField] private float intervaloMax = 3f;
+    [Range(0f, 1f)][SerializeField] private float probTop = 0.5f; //Prob es probabilidad, osea la chance de que aparezca el objeto arriba 
+
+    [Header("Velocidad")]
+    [SerializeField] private float velocidadBase = -5f;
+    [SerializeField] private float dificultadDivisor = 5f;
+
+    [Header("Tiempo!!!")]
+    [SerializeField] private TextMeshProUGUI timerText;
+
     float timer;
-    [SerializeField] float intervalo;
-    [SerializeField] GameObject[] Spawns;
-    bool up;
-    float originalIntervalo;
-    [SerializeField] TextMeshProUGUI timerText;
 
     void Start()
     {
-        originalIntervalo = intervalo;
-        Invoke("Spawn", intervalo);
+        if (intervaloMin < 0.01f) intervaloMin = 0.01f;
+        if (intervaloMax < intervaloMin) intervaloMax = intervaloMin;
+
+        StartCoroutine(RutinaDeSpawn());
     }
 
-    // Update is called once per frame
     void Update()
     {
         timer += Time.deltaTime;
-        timerText.text = "Tiempo: " + Math.Round(timer, 2);
+        if (timerText) timerText.text = "Tiempo: " + Mathf.Round(timer * 100f) / 100f;
     }
 
-    void Spawn()
+    IEnumerator RutinaDeSpawn()
     {
-        int i = UnityEngine.Random.Range(0, Spawns.Length);
+        while (true)
+        {
+            bool spawnTop = Random.value < probTop;
+            GameObject[] grupo = spawnTop ? topPrefabs : bottomPrefabs;
 
-        int random = UnityEngine.Random.Range(0, Enemies.Length);
+            if (grupo == null || grupo.Length == 0) { yield return new WaitForSeconds(intervaloMax); continue; }
+            GameObject prefab = grupo[Random.Range(0, grupo.Length)];
 
-        GameObject temporalEnemy = Instantiate(Enemies[random], Spawns[i].transform.position, Quaternion.identity);
-        temporalEnemy.GetComponent<Rigidbody2D>().linearVelocityX = -5 - (timer / 5);
-        float r = UnityEngine.Random.Range(1, 3);
-        intervalo = r;
-        Invoke("Spawn", intervalo);
-        up = !up;
+            Transform origen = PerteneceAlGrupo(prefab, bottomPrefabs) ? spawnAbajo : spawnArriba;
 
+            if (!origen) { yield return new WaitForSeconds(intervaloMax); continue; }
 
+            GameObject go = Instantiate(prefab, origen.position, Quaternion.identity);
+            if (go.TryGetComponent<Rigidbody2D>(out var rb))
+            {
+                float velocidadX = velocidadBase - (timer / dificultadDivisor);
+                rb.linearVelocity = new Vector2(velocidadX, rb.linearVelocity.y);
+            }
+
+            yield return new WaitForSeconds(Random.Range(intervaloMin, intervaloMax));
+        }
+    }
+
+    bool PerteneceAlGrupo(GameObject x, GameObject[] arr)
+    {
+        if (!x || arr == null) return false;
+        for (int i = 0; i < arr.Length; i++)
+            if (arr[i] == x) return true;
+        return false;
     }
 }
+
